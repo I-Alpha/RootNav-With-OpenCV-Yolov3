@@ -1,0 +1,25 @@
+﻿<Window x:Class="RootNav.Interface.Windows.TagBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Tag New Measurments" Height="139" Width="296" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" ResizeMode="NoResize">
+    <Grid Margin="6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="32"/>
+        </Grid.RowDefinitions>
+        <TextBlock Name="mainTextBlock" Grid.Row="0" Text="Add a tag to the new measurements?" Margin="0 0 0 6"></TextBlock>
+        <TextBox Name="tagTextbox" Grid.Row="1" Height="28" Margin="0 0 0 6" KeyDown="tagTextbox_KeyDown"></TextBox>
+        
+        <Grid Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Name="OKButton" Width="83" Content="Yes" Click="OKButton_Click" HorizontalAlignment="Stretch"></Button>
+            <Button Grid.Column="1" Name="NoButton" Width="83" Content="No" Click="NoButton_Click"  HorizontalAlignment="Stretch"></Button>
+            <Button Grid.Column="2" Name="CancelButton" Width="83" Content="Cancel" Click="CancelButton_Click" HorizontalAlignment="Stretch"></Button>
+        </Grid>
+    </Grid>
+</Window>

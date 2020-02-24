@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="RootNav.Interface.Controls.DetectionToolbox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:c="clr-namespace:RootNav.Interface.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="300">
+    <Grid Name="MainGrid" Margin="3 3 3 3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="48" />
+            <RowDefinition Height="48" />
+            <RowDefinition Height="48" />
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <CheckBox Name="snapToTipsCheckBox"  Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Content="Snap to detected tips" Margin="3 3 3 3" Foreground="{Binding ElementName=tipDetectionLabel, Path=Foreground}">
+        </CheckBox>
+        
+        <Border Name="cornerDetectionBorder"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="#777" BorderThickness="1" Margin="3" CornerRadius="3">
+            <Label Name="tipDetectionLabel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Tip Detection"/>
+        </Border>
+        
+        <Border Name="cornerProcessingBorder" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="DarkGray" BorderThickness="1" Margin="3" CornerRadius="3" Visibility="Hidden">
+            <Border.Triggers>
+                <EventTrigger RoutedEvent="Border.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="stop1" Storyboard.TargetProperty="Offset" From="-0.4" To="1" RepeatBehavior="Forever"/>
+                            <DoubleAnimation Storyboard.TargetName="stop2" Storyboard.TargetProperty="Offset" From="-0.2" To="1.2" RepeatBehavior="Forever"/>
+                            <DoubleAnimation Storyboard.TargetName="stop3" Storyboard.TargetProperty="Offset" From="0" To="1.4" RepeatBehavior="Forever"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Border.Triggers>
+
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop x:Name="stop1" Offset="-0.2" Color="Transparent"/>
+                    <GradientStop x:Name="stop2" Offset="0" Color="#FF33FF33"/>
+                    <GradientStop x:Name="stop3" Offset="0.2" Color="Transparent"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Label HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Detecting Tips"/>
+        </Border>
+
+        <ToggleButton Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="3"
+                      Name="AddRootSourceToggleButton" Content="Add Source"
+                      Checked="RootToggleButton_Checked" Unchecked="RootToggleButton_Unchecked"/>
+        <ToggleButton Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="3"
+                      Name="AddPrimaryToggleButton" Content="Add Primary"
+                      Checked="RootToggleButton_Checked" Unchecked="RootToggleButton_Unchecked"/>
+        <ToggleButton Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="3"
+                      Name="RemoveRootTerminalToggleButton" Content="Remove Terminal"
+                      Checked="RootToggleButton_Checked" Unchecked="RootToggleButton_Unchecked"/>
+        <ToggleButton Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="3"
+                      Name="AddLateralToggleButton" Content="Add Lateral"
+                      Checked="RootToggleButton_Checked" Unchecked="RootToggleButton_Unchecked"/>
+        
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Margin="3"
+                      Name="AnalysePrimaryRootsButton" Content="Analyse Primary Roots" Click="AnalysePrimaryRootsButton_Click" />
+
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Margin="3"
+                      Name="AnalyseLateralRootsButton" Content="Analyse Lateral Roots" Click="AnalyseLateralRootsButton_Click" />
+    </Grid>
+</UserControl>

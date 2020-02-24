@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="RootNav.Interface.Controls.PathInfoViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" d:DesignHeight="147" d:DesignWidth="260">
+    <Grid Margin="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="141"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="18"/>
+            <RowDefinition Height="18"/>
+            <RowDefinition Height="18"/>
+            <RowDefinition Height="18"/>
+            <RowDefinition Height="18"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock HorizontalAlignment="Left" Grid.Row="3" Grid.Column="0" Height="18" Name="textBlock1" Text="Map Weight:" Width="85" />
+        <TextBlock HorizontalAlignment="Left" Grid.Row="4" Grid.Column="0" Height="18" Name="textBlock2" Text="Curvature Weight:" Width="103" />
+        <TextBlock HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Height="18" Name="textBlock3" Text="Length:" Width="70" />
+        <TextBlock HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Height="18" Name="textBlock4" Text="Pixel Length:" Width="70" />
+        <TextBlock HorizontalAlignment="Left" Grid.Row="2" Height="18" Name="textBlock5" Text="Length Weight:" Width="85" />
+
+        <TextBlock HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" Height="18" Name="lengthTextblock" Text="0.8861" Width="96" />
+        <TextBlock HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" Height="18" Name="pixelLengthTextblock" Text="0.8861" Width="96" />
+        <TextBlock HorizontalAlignment="Left" Grid.Row="3" Grid.Column="1" Height="18" Name="mapWeightTextblock" Text="0.8861" Width="96" />
+        <TextBlock HorizontalAlignment="Left" Grid.Row="4" Grid.Column="1"  Height="18" Name="curvatureWeightTextblock" Text="0.8861" Width="96" />
+        <TextBlock HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1"  Height="18" Name="lengthWeightTextblock" Text="0.8861" Width="96" />
+    </Grid>
+</UserControl>

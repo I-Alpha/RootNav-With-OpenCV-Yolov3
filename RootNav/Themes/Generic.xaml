@@ -1,0 +1,125 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:RootNav.Interface.Controls">
+
+    <Style TargetType="{x:Type local:TipHighlighter}">
+        <Setter Property="IsHitTestVisible" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:TipHighlighter}">
+                    <Ellipse Fill="#99000000" Width="20" Height="20" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" StrokeDashArray="3 3">
+                        <Ellipse.RenderTransform>
+                            <RotateTransform x:Name="rotationTransform" Angle="0" CenterX="10" CenterY="10"/>
+                        </Ellipse.RenderTransform>
+                    </Ellipse>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="Control.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation From="0" To="359" Duration="0:0:5.0" RepeatBehavior="Forever" AutoReverse="False"
+                                                     Storyboard.TargetName="rotationTransform"
+                                                     Storyboard.TargetProperty="Angle"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="{x:Type local:TerminalRootSelector}">
+        <Setter Property="Width" Value="60"/>
+        <Setter Property="Height" Value="60"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:TerminalRootSelector}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <local:RelativePositionPanel x:Name="mainPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <local:RelativePositionPanel.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1" CenterX="30" CenterY="30"/>
+                            </local:RelativePositionPanel.RenderTransform>
+                            <Ellipse Fill="Transparent" Width="60" Height="60" local:RelativePositionPanel.RelativePositionX="0.5" local:RelativePositionPanel.RelativePositionY="0.5"/>
+                        </local:RelativePositionPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="Control.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation From="0" To="1" Duration="0:0:0.150" AutoReverse="False"
+                                                     Storyboard.TargetName="mainPanel"
+                                                     Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleY)"/>
+                                    <DoubleAnimation From="0" To="1" Duration="0:0:0.150" AutoReverse="False"
+                                                     Storyboard.TargetName="mainPanel"
+                                                     Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(ScaleTransform.ScaleX)"/>                      
+                                    </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:TerminalNode}">
+        <Setter Property="Width" Value="12"/>
+        <Setter Property="Height" Value="12"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:TerminalNode}">
+                    <Grid>
+                        <Ellipse Name="mainEllipse" Fill="{TemplateBinding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <Ellipse Name="highlightEllipse" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="#44FFFFFF" Opacity="0"/>
+                        <Ellipse Name="borderEllipse" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Ellipse.Fill>
+                                <RadialGradientBrush>
+                                    <GradientStop Offset="0" Color="Transparent"/>
+                                    <GradientStop Offset="0.9" Color="Transparent"/>
+                                    <GradientStop Offset="1" Color="#BB000000"/>
+                                </RadialGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <Ellipse Name="gelEllipse" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,0.2">
+                            <Ellipse.Fill>
+                                <RadialGradientBrush GradientOrigin="0.5,0.2">
+                                    <GradientStop Offset="0" Color="#AAFFFFFF"/>
+                                    <GradientStop Offset="0.1" Color="#AAFFFFFF"/>
+                                    <GradientStop Offset="1" Color="Transparent"/>
+                                </RadialGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From="0" To="1" Duration="0:0:0.075" AutoReverse="False"
+                                                     Storyboard.TargetName="highlightEllipse"
+                                                     Storyboard.TargetProperty="Opacity"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From="1" To="0" Duration="0:0:0.075" AutoReverse="False"
+                                                     Storyboard.TargetName="highlightEllipse"
+                                                     Storyboard.TargetProperty="Opacity"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
+
+    

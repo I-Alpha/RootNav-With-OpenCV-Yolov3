@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="RootNav.Interface.Controls.MeasurementToolbox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:c="clr-namespace:RootNav.Interface.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="300">
+    <Grid Name="MainGrid" Margin="3 3 3 3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="48" />
+            <RowDefinition Height="48" />
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Margin="3">
+            <CheckBox Name="curvatureProfileCheckbox" VerticalAlignment="Center" Content="Curvature profile" Margin="3 3 3 0" Foreground="#FFBBBBBB"></CheckBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <CheckBox Name="mapProfileCheckbox" VerticalAlignment="Center" Content="Map profile" Margin="3 3 3 0" Foreground="#FFBBBBBB"></CheckBox>
+                <Label Content="Travel:" Foreground="#FFBBBBBB" Padding="0" Margin="12 0 0 0" VerticalContentAlignment="Bottom"/>
+                <Label Width="20" HorizontalContentAlignment="Right" Content="{Binding Path=Value, ElementName=travelSlider}" Foreground="#FFBBBBBB" Padding="0" VerticalContentAlignment="Bottom"/>
+                <Label Content="px" Foreground="#FFBBBBBB" Padding="0" Margin="0 0 6 0" VerticalContentAlignment="Bottom"/>
+                <Slider HorizontalAlignment="Right" Name="travelSlider" Width="90" Margin="3 3 3 0" Maximum="100" Minimum="10" Value="20" TickFrequency="1" Height="16" IsSnapToTickEnabled="True"/>
+            </StackPanel>
+            <CheckBox Name="measurementOutputCheckbox" VerticalAlignment="Center" Visibility="Collapsed" Content="Output measurement table" Foreground="#FFBBBBBB" Margin="3 3 3 3"></CheckBox>
+            <CheckBox Name="completeArchitectureOutputCheckbox" VerticalAlignment="Center" Visibility="Visible" Content="Complete architecture recorded" Foreground="#FFBBBBBB" IsChecked="True" Margin="3 3 3 3"></CheckBox>
+            <CheckBox Name="outputImageCheckbox" VerticalAlignment="Center" Visibility="Visible" Content="Add Source Image to Database" Foreground="#FFBBBBBB" IsChecked="True" Margin="3 3 3 3"></CheckBox>
+        </StackPanel>
+
+        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Margin="3"
+                      Name="MeasurementButton" Content="Measure" Click="MeasurementButton_Click" />
+        <!--
+        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="3"
+                      Name="connectButton" Content="Connect to Database" Click="connectButton_Click" />
+        -->
+        <Border Name="connectedBorder" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Background="#FF44DD44" BorderBrush="#FF008800" BorderThickness="1" CornerRadius="3">
+            <StackPanel VerticalAlignment="Center">
+                <Label Padding="0" Name="connectedLabel" Foreground="Black" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Connected</Label>
+                <Label Padding="0" Name="serverLabel" Foreground="Black" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Server</Label>
+            </StackPanel>
+        </Border>
+        
+    </Grid>
+</UserControl>

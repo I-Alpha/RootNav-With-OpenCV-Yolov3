@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="RootNav.Interface.Controls.EMToolbox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:c="clr-namespace:RootNav.Interface.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="325" d:DesignWidth="300">
+    <Grid Name="MainGrid" Margin="3 3 3 3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="48" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Style="{StaticResource GrayBlock}" Text="Preset Root Types" Grid.Column="0" Grid.Row="0" Margin="3"/>
+
+        <Button Style="{StaticResource CloseButton}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="2" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2" Click="Button_Click">
+            <Button.Content>
+                <TextBlock TextDecorations="Underline">Advanced</TextBlock>
+            </Button.Content>
+        </Button>
+        
+
+        <ComboBox x:Name="emPresetComboBox" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="3" SelectionChanged="emPresetComboBox_SelectionChanged"/>
+        <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4"/>
+        
+        <c:AnimatedBorder x:Name="advancedBorder" Grid.Row="3" Grid.ColumnSpan="4" IsHidden="True">
+            <Grid Grid.Row="3" Grid.ColumnSpan="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Canvas Grid.Row="0" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" Height="50" Margin="3">
+
+                    <TextBlock Style="{StaticResource GrayBlock}" Text="Initial Class Count:" Canvas.Left="0" Canvas.Top="3" />
+                    <TextBox x:Name="initialCountTextBox"  Width="20" Canvas.Left="124" Canvas.Top="0" TextChanged="ValuesChanged" />
+
+
+                    <TextBlock Style="{StaticResource GrayBlock}" Text="Max Class Count:" Canvas.Left="150" Canvas.Top="3" />
+                    <TextBox x:Name="maximumCountTextBox" Width="20" Canvas.Left="246" Canvas.Top="0" TextChanged="ValuesChanged" />
+
+
+                    <TextBlock Style="{StaticResource GrayBlock}" Text="Patch Size:" Canvas.Left="174" Canvas.Top="31" />
+                    <TextBox x:Name="patchSizeTextBox" Width="30" Canvas.Left="236" Canvas.Top="28" TextChanged="ValuesChanged"  />
+
+
+                    <TextBlock Style="{StaticResource GrayBlock}" Text="Expected Class Count:" Canvas.Left="0" Canvas.Top="31" />
+                    <TextBox x:Name="expectedClassCountTextBox" Width="20" Canvas.Left="124" Canvas.Top="28" TextChanged="ValuesChanged"  />
+                </Canvas>
+                <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4"/>
+
+                <Canvas Grid.Row="5" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" Margin="3" Height="50">
+                    <TextBlock Style="{StaticResource GrayBlock}" Text="Threshold %:" Margin="3" Canvas.Left="-3" Canvas.Top="0" />
+                    <TextBox x:Name="thresholdPercentageTextBox" Width="30" Canvas.Left="74" Canvas.Top="0" TextChanged="ValuesChanged"/>
+                    <TextBlock Style="{StaticResource GrayBlock}" Canvas.Left="114" Canvas.Top="3" Text="Threshold Overflow &#963;:" />
+                    <TextBox Canvas.Left="236" Canvas.Top="0" Name="thresholdSigmaTextBox" Width="30"  TextChanged="ValuesChanged" />
+                    <TextBlock Style="{StaticResource GrayBlock}" Canvas.Left="0" Canvas.Top="31" Text="Mapping Weights:" />
+                    <TextBox Canvas.Left="103" Canvas.Top="28" Name="weightsTextBox" Width="99"  TextChanged="ValuesChanged" />
+                </Canvas>
+            </Grid>
+        </c:AnimatedBorder>
+        <Button x:Name="reCalculateEMButton" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" Margin="3" Content="Apply E-M Algorithm" Click="reCalculateEMButton_Click" IsEnabled="false" />
+    </Grid>
+</UserControl>
