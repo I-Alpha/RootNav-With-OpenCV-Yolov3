@@ -29,6 +29,7 @@ using RootNav.Measurement;
 using RootNav.Data;
 using RootNav.Data.IO;
 using RootNav.Data.IO.Databases;
+using OpenCvSharpYolo3; 
 
 namespace RootNav.Interface.Windows
 {
@@ -492,7 +493,6 @@ namespace RootNav.Interface.Windows
                     TimeInSequence = 0.0
                 };
 
-                //call Yolov3 class here 
 
 
                 // For TIF files, extract header information
@@ -526,10 +526,12 @@ namespace RootNav.Interface.Windows
                     this.StartScreenLabel.Visibility = System.Windows.Visibility.Visible;
                     this.imageInfo = null;
                     return;
-                }              
+                }
 
                 sourceBitmap = wbmp;
+             
             }
+
             catch
             {
                 this.StartScreenLabel.Visibility = System.Windows.Visibility.Visible;
@@ -816,7 +818,7 @@ namespace RootNav.Interface.Windows
                 {
                     this.screenOverlay.TipAnchorPoints.Add((Point)p);
 
-                   // this.screenOverlay.Terminals.Add((Point)p, TerminalType.Undefined, false);
+                   //this.screenOverlay.Terminals.Add((Point)p, TerminalType.Undefined, false);
                 }
             }
 
@@ -1865,6 +1867,7 @@ namespace RootNav.Interface.Windows
 
         private void NewImageMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            OpenCVY3 getYoloRes = new OpenCVY3();
             if (!this.screenOverlay.IsBusy)
             {
                 string filePath;
@@ -1874,6 +1877,35 @@ namespace RootNav.Interface.Windows
                     {
                         ResetAll();
                         LoadImages(filePath);
+
+                        //Here class in Yolov3OpenCv is called. 
+                        //predictions are collected and added according to their class. 
+                        #region Yolov3 OpenCV upgrade starts here 
+                        getYoloRes.yworker(filePath);
+
+                        for (int i = 0; i < getYoloRes.myres.classIds.Count(); i++)
+                        {
+                            if (getYoloRes.myres.classIds[i] == 0)
+                            {
+                                this.detectionToolbox.Mode = DetectionToolbox.RootTerminalControlMode.AddPrimary;
+                            }
+
+                            if (getYoloRes.myres.classIds[i] == 1)
+                            {
+                                this.detectionToolbox.Mode = DetectionToolbox.RootTerminalControlMode.AddLateral;
+                            }
+
+                            if (getYoloRes.myres.classIds[i] == 2)
+                            {
+                                this.detectionToolbox.Mode = DetectionToolbox.RootTerminalControlMode.AddSource;  
+                            }
+
+                            this.screenOverlay.fakemouseclickdown(getYoloRes.myres.cpoints[i]);
+                            this.screenOverlay.fakemouseclickup(getYoloRes.myres.cpoints[i]);
+                            this.detectionToolbox.Mode = DetectionToolbox.RootTerminalControlMode.None;
+                        };
+                        #endregion
+                        //code change ends here.
                     }
                     else if (this.sourceBitmap == null)
                     {

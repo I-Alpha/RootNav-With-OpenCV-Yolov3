@@ -1137,6 +1137,95 @@ namespace RootNav.Interface.Controls
             }
         }
 
+        public void fakemouseclickdown(Point fakeclick)
+        {
+            if (Stage == OverlayStage.Detection)
+            {
+                this.mousePosition = fakeclick;
+
+                MainWindow mw = MainWindow.GetMainWindowParent(this);
+                if (mw != null)
+                {
+                    mw.ShowGMM(fakeclick);
+                }
+
+                if (this.DetectionMode == DetectionToolbox.RootTerminalControlMode.None)
+                {
+                    // Initiate a drag event on a root
+                    if (this.paths != null && this.currentHighlightedRootIndex >= 0)
+                    {
+                        if (this.ContextMenu != null && this.ContextMenu.IsVisible)
+                        {
+                            // We have returned from the context menu. Recalculate move event
+                            // Find next highlighted root and/or control point if necessary
+                            bool invalidateRequired = FindUIPoints(false, true, true);
+
+                            if (invalidateRequired)
+                            {
+                                this.InvalidateVisual();
+                            }
+
+                            return;
+                        }
+
+                        // Initiate a terminal or control point drag event
+                        if (!this.isRootDragInProgress)
+                        {
+                            if (this.currentHighlightedTerminalIndex >= 0)
+                            {
+                                BeginTerminalPointDrag();
+                            }
+                            else if (this.currentHighlightedControlPointIndex >= 0 || this.currentHighlightedRootIndex >= 0)
+                            {
+                                BeginControlPointDrag();
+                            }
+                        }
+                    }
+                    else if (this.currentHighlightedTerminalIndex >= 0)
+                    {
+                        BeginTerminalPointDrag();
+                    }
+
+                }
+            }
+            else if (Stage == OverlayStage.Measurement)
+            {
+                if (this.HighlightedSplineRootInfo != null && this.measurementAnglePointType.HasValue)
+                {
+                    this.isMeasurementAngleDragInProgress = true;
+                }
+                else
+                {
+                    // Select or deselect roots as necessary
+                    foreach (RootBase r in this.Roots)
+                    {
+                        if (r.IsHighlighted)
+                        {
+                            if (r.IsSelected == false)
+                            {
+                                r.IsSelected = true;
+                                this.HighlightedSplineRootInfo = new RootInfo() { BaseRoot = r };
+                                this.InvalidateVisual();
+                            }
+                        }
+                        else
+                        {
+                            if (r.IsSelected == true)
+                            {
+                                r.IsSelected = false;
+
+                                if (this.HighlightedSplineRootInfo != null && this.HighlightedSplineRootInfo.BaseRoot == r)
+                                {
+                                    this.HighlightedSplineRootInfo = null;
+                                }
+
+                                this.InvalidateVisual();
+                            }
+                        }
+                    }
+                }
+            }
+        }
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
 
@@ -1229,6 +1318,102 @@ namespace RootNav.Interface.Controls
         }
 
         private RootTerminal previouslyAddedSource = null;
+
+        public void fakemouseclickup(Point fakeclick)
+        {
+            if (Stage == OverlayStage.Detection)
+            {
+                Point mousePosition = fakeclick;
+
+                Point insertPosition = mousePosition;
+                if (this.tipHighlightAdornerPosition != default(Point))
+                {
+                    insertPosition = new Point(this.tipHighlightAdornerPosition.X, this.tipHighlightAdornerPosition.Y);
+                }
+
+                switch (this.DetectionMode)
+                {
+                    case DetectionToolbox.RootTerminalControlMode.AddPrimary:
+                        if (this.currentHighlightedTerminalIndex >= 0 && this.terminalCollection[this.currentHighlightedTerminalIndex].Type == TerminalType.Undefined)
+                        {
+                            this.terminalCollection[this.currentHighlightedTerminalIndex].Type = TerminalType.Primary;
+                        }
+                        else
+                        {
+                            this.terminalCollection.Add(insertPosition, TerminalType.Primary, this.LinkAdd);
+                        }
+
+                        RemoveTipHighlight();
+                        FindUIPoints(true, false, false);
+                        break;
+                    case DetectionToolbox.RootTerminalControlMode.AddSource:
+                        if (this.currentHighlightedTerminalIndex >= 0 && this.terminalCollection[this.currentHighlightedTerminalIndex].Type == TerminalType.Undefined)
+                        {
+                            this.terminalCollection[this.currentHighlightedTerminalIndex].Type = TerminalType.Source;
+                        }
+                        else
+                        {
+                            this.terminalCollection.Add(insertPosition, TerminalType.Source, false);
+                            this.previouslyAddedSource = this.terminalCollection.Last();
+                        }
+
+                        RemoveTipHighlight();
+                        FindUIPoints(true, false, false);
+                        break;
+                    case DetectionToolbox.RootTerminalControlMode.AddLateral:
+                        if (this.currentHighlightedTerminalIndex >= 0 && this.terminalCollection[this.currentHighlightedTerminalIndex].Type == TerminalType.Undefined)
+                        {
+                            this.terminalCollection[this.currentHighlightedTerminalIndex].Type = TerminalType.Lateral;
+                        }
+                        else
+                        {
+                            this.terminalCollection.Add(insertPosition, TerminalType.Lateral, false);
+                        }
+
+                        RemoveTipHighlight();
+                        FindUIPoints(true, false, false);
+                        break;
+                    case DetectionToolbox.RootTerminalControlMode.RemoveTerminal:
+                        if (this.currentHighlightedTerminalIndex >= 0)
+                        {
+                            this.terminalCollection.RemoveAt(this.currentHighlightedTerminalIndex);
+
+                            // Find any other nearby terminals, or reset the mouse cursor
+                            FindUIPoints(true, false, false);
+                        }
+                        break;
+                    case DetectionToolbox.RootTerminalControlMode.None:
+                        if (this.IsDragInProgress)
+                        {
+                            if (this.isTerminalPointDragInProgress)
+                            {
+                                // End the terminal point drag event
+                                EndTerminalPointDrag();
+                            }
+                            else if (this.isControlPointDragInProgress)
+                            {
+                                // End the control point drag event
+                                EndControlPointDrag();
+                            }
+                            else if (this.isRootDragInProgress)
+                            {
+                                // End the root drag event
+                                EndRootDrag();
+                            }
+
+                            // Find current root and/or control point under the mouse position - No need to check for invalidate visual, as it is called anyway at the end of this function
+                            FindUIPoints(true, true, true);
+                        }
+                        break;
+                }
+
+                this.InvalidateVisual();
+            }
+            else if (this.Stage == OverlayStage.Measurement)
+            {
+                this.isMeasurementAngleDragInProgress = false;
+            }
+        }
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {

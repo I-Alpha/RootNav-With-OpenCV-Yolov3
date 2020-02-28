@@ -259,3 +259,8 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/OpenCvSharpYolo3/Content/yolov3.weights
+/OpenCvSharpYolo3/Content/yolov3.weights
+*.weights
+/OpenCvSharpYolo3/Content/yolov3.weights
+/OpenCvSharpYolo3/Content/yolov3.weights
