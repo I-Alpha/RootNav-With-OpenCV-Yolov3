@@ -35,7 +35,7 @@ namespace OpenCvSharpYolo3
 
         //file location
       
-        private const string Location = @"C:\Users\Ibrah\OneDrive\Documents\University\FProject\rootnav\OpenCvSharpYolo3\Content\";
+        private const string Location = @"..\..\..\..\OpenCvSharpYolo3\Content\";
         //random assign color to each label
         private static readonly Scalar[] Colors = Enumerable.Repeat(false, 80).Select(x => Scalar.RandomColor()).ToArray();
 
