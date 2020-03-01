@@ -29,7 +29,7 @@ using RootNav.Measurement;
 using RootNav.Data;
 using RootNav.Data.IO;
 using RootNav.Data.IO.Databases;
-using OpenCvSharpYolo3; 
+using OpenCvSharpYolo3;
 
 namespace RootNav.Interface.Windows
 {
@@ -46,7 +46,7 @@ namespace RootNav.Interface.Windows
         public delegate void LiveWireLateralCompletedDelegate(List<LiveWireLateralPath> paths);
         public delegate void LiveWirePrimaryCompletedDelegate(List<LiveWirePrimaryPath> paths);
         public delegate void LiveWireReCompletedDelegate();
-        
+
         private EMManager emManager = null;
         private byte[] intensityBuffer = null;
         private GaussianMixtureModel highlightedMixture = null;
@@ -56,7 +56,7 @@ namespace RootNav.Interface.Windows
         private EMConfiguration[] configurations;
         private EMConfiguration customConfiguration = null;
         private int currentEMConfiguration = 0;
-        
+
         private bool connectionExists = false;
 
         RootNav.Data.IO.Databases.DatabaseManager databaseManager = null;
@@ -90,6 +90,8 @@ namespace RootNav.Interface.Windows
         }
 
         private RootTerminalCollection terminalCollection = new RootTerminalCollection();
+
+        private IOpenCVModule getYoloRes = new OpenCVY3();
 
         public MainWindow()
         {
@@ -154,7 +156,7 @@ namespace RootNav.Interface.Windows
                 return;
             }
 
-            
+
 
         }
 
@@ -165,8 +167,8 @@ namespace RootNav.Interface.Windows
                 this.currentEMConfiguration = newindex;
                 this.EMDetectionToolbox.FromEMConfiguration(configurations[currentEMConfiguration]);
             }
-            
-            
+
+
         }
 
         public void BeginEMFromToolbox()
@@ -279,7 +281,7 @@ namespace RootNav.Interface.Windows
 
             this.rootTreeView.MouseMove += new MouseEventHandler(rootTreeView_MouseMove);
             this.rootTreeView.MouseLeave += new MouseEventHandler(rootTreeView_MouseLeave);
-     
+
             this.rootTreeView.SelectedItemChanged += new RoutedPropertyChangedEventHandler<object>(rootTreeView_SelectedItemChanged);
 
             this.detectionSlidePanel.BeginHide();
@@ -348,7 +350,7 @@ namespace RootNav.Interface.Windows
 
         private RootBase GetRootDataFromPoint(ItemsControl source, Point point)
         {
-            var item = source.InputHitTest(point) as FrameworkElement;    
+            var item = source.InputHitTest(point) as FrameworkElement;
             return item == null ? null : item.DataContext as RootBase;
         }
 
@@ -394,8 +396,8 @@ namespace RootNav.Interface.Windows
         {
             FileDragInProgress = false;
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            { 
-                string[] droppedFilePaths = 
+            {
+                string[] droppedFilePaths =
                 e.Data.GetData(DataFormats.FileDrop, true) as string[];
 
                 if (droppedFilePaths.Length > 0)
@@ -454,7 +456,7 @@ namespace RootNav.Interface.Windows
                 }
                 bmp.Freeze();
 
-                
+
                 WriteableBitmap wbmp = new WriteableBitmap(bmp);
 
                 if (wbmp.Format == PixelFormats.Indexed8 || wbmp.Format == PixelFormats.Bgra32 || wbmp.Format == PixelFormats.Gray8)
@@ -468,7 +470,7 @@ namespace RootNav.Interface.Windows
                 }
 
                 return true;
-                
+
             }
             catch
             {
@@ -529,7 +531,7 @@ namespace RootNav.Interface.Windows
                 }
 
                 sourceBitmap = wbmp;
-             
+
             }
 
             catch
@@ -726,7 +728,7 @@ namespace RootNav.Interface.Windows
             {
                 this.screenOverlay.RemoveTipHighlight();
             }
-            
+
             base.OnKeyDown(e);
         }
 
@@ -740,7 +742,7 @@ namespace RootNav.Interface.Windows
             this.probabilityMapBrightestClass = new double[this.emManager.Width * this.emManager.Height];
             this.probabilityMapSecondClass = new double[this.emManager.Width * this.emManager.Height];
             this.screenOverlay.PatchSize = this.emManager.Configuration.PatchSize;
-            
+
             foreach (KeyValuePair<EMPatch, GaussianMixtureModel> Pair in this.emManager.Mixtures)
             {
                 EMPatch currentPatch = Pair.Key;
@@ -807,7 +809,7 @@ namespace RootNav.Interface.Windows
             {
                 points = tdw.Points;
             }
-       
+
             if (points != null)
             {
                 this.screenOverlay.TipAnchorPoints.Clear();
@@ -818,7 +820,7 @@ namespace RootNav.Interface.Windows
                 {
                     this.screenOverlay.TipAnchorPoints.Add((Point)p);
 
-                   //this.screenOverlay.Terminals.Add((Point)p, TerminalType.Undefined, false);
+                    //this.screenOverlay.Terminals.Add((Point)p, TerminalType.Undefined, false);
                 }
             }
 
@@ -917,7 +919,7 @@ namespace RootNav.Interface.Windows
             }
         }
 
-        
+
         public void ReprocessAlteredRoot(params int[] rootIndexes)
         {
             this.screenOverlay.IsBusy = true;
@@ -974,7 +976,7 @@ namespace RootNav.Interface.Windows
             int combinations = this.screenOverlay.Terminals.UnlinkedSources.Count() * this.screenOverlay.Terminals.UnlinkedPrimaries.Count() + this.screenOverlay.Terminals.TerminalLinks.Count();
 
             int threadCount = Math.Min(Core.Threading.ThreadParams.LiveWireThreadCount, combinations);
-            
+
             this.statusText.Text = "Status: Examining " + combinations.ToString() + " potential" + (combinations == 1 ? " root" : " roots");
 
             this.primaryLiveWireManager = new LiveWirePrimaryManager()
@@ -1120,7 +1122,7 @@ namespace RootNav.Interface.Windows
                         break;
                     }
                 }
-               
+
 
                 UpdateImageOnPatchChange(currentPatch, currentModel, wbmp, featureBitmap);
 
@@ -1147,7 +1149,7 @@ namespace RootNav.Interface.Windows
             int width = emManager.Width;
             int height = emManager.Height;
             EMConfiguration config = emManager.Configuration;
-            
+
             screenBitmap.Lock();
             featureBitmap.Lock();
             uint* outputPointer = (uint*)screenBitmap.BackBuffer.ToPointer();
@@ -1172,7 +1174,7 @@ namespace RootNav.Interface.Windows
                     {
                         // Normalised probability
                         normalisedProbabilities[intensity, k] = model.NormalisedProbability(intensity, k);
-                        
+
                         // Maximum for this intensity
                         if (normalisedProbabilities[intensity, k] > max)
                         {
@@ -1245,7 +1247,7 @@ namespace RootNav.Interface.Windows
 
                 // Saves the blue channel out to a probability map
                 //ImageEncoder.SaveImage(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\featuremap.png", featureBitmap, ImageEncoder.EncodingType.PNG);
-            } 
+            }
         }
 
         unsafe private void ModelThresholdChanged(int threshold)
@@ -1310,7 +1312,7 @@ namespace RootNav.Interface.Windows
         }
 
         private void PathInfoCloseButton_Click(object sender, RoutedEventArgs e)
-        { 
+        {
             this.PathInfoViewBorder.Hide();
         }
 
@@ -1342,7 +1344,7 @@ namespace RootNav.Interface.Windows
             {
                 return;
             }
-            
+
             string tag = t.Text;
             if (!addtag.Value || tag == "")
             {
@@ -1371,7 +1373,7 @@ namespace RootNav.Interface.Windows
                 {
                     // Create instance of writer class
                     RootNav.Data.IO.RSML.RSMLRootWriter writer = new Data.IO.RSML.RSMLRootWriter(connectionInfo);
-                    
+
                     // Create Scene and Metadata
                     SceneMetadata metadata = RootFormatConverter.RootNavDataToRSMLMetadata(this.imageInfo, this.imageHeaderInfo, tag, this.screenOverlay.Roots);
                     SceneInfo scene = RootFormatConverter.RootCollectionToRSMLScene(this.screenOverlay.Roots);
@@ -1406,7 +1408,7 @@ namespace RootNav.Interface.Windows
                     }
                     mw.Add(data);
                 }
-                
+
                 mw.Show();
             }
 
@@ -1450,7 +1452,7 @@ namespace RootNav.Interface.Windows
                         {
                             for (int j = 0; j < distanceAnglePair.Length; j++)
                             {
-                                outputArray[i, j + 1] = Math.Round(distanceAnglePair[j].Item2,1).ToString();
+                                outputArray[i, j + 1] = Math.Round(distanceAnglePair[j].Item2, 1).ToString();
                                 outputArray[0, j + 1] = Math.Round(distanceAnglePair[j].Item1).ToString();
                             }
 
@@ -1465,10 +1467,10 @@ namespace RootNav.Interface.Windows
 
                         i++;
                     }
-                    
+
                 }
 
-               
+
                 // Turn array into data table
                 DataTable dt = new DataTable();
                 int nbColumns = outputArray.GetLength(0);
@@ -1483,7 +1485,7 @@ namespace RootNav.Interface.Windows
                     DataRow dr = dt.NewRow();
                     for (int col = 0; col < nbColumns; col++)
                     {
-                        dr[col] = outputArray[col,row];
+                        dr[col] = outputArray[col, row];
                     }
                     dt.Rows.Add(dr);
                 }
@@ -1569,7 +1571,7 @@ namespace RootNav.Interface.Windows
                             }
                         }
 
-                        i+=2;
+                        i += 2;
                     }
 
                 }
@@ -1719,7 +1721,7 @@ namespace RootNav.Interface.Windows
                         case Key.I:
                             if (this.showSourceImage)
                             {
-                               this.ShowBackgroundProbabilityImage.IsChecked = true;
+                                this.ShowBackgroundProbabilityImage.IsChecked = true;
                             }
                             else
                             {
@@ -1867,7 +1869,9 @@ namespace RootNav.Interface.Windows
 
         private void NewImageMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            OpenCVY3 getYoloRes = new OpenCVY3();
+
+
+
             if (!this.screenOverlay.IsBusy)
             {
                 string filePath;
@@ -1881,27 +1885,29 @@ namespace RootNav.Interface.Windows
                         //Here class in Yolov3OpenCv is called. 
                         //predictions are collected and added according to their class. 
                         #region Yolov3 OpenCV upgrade starts here 
-                        getYoloRes.yworker(filePath);
 
-                        for (int i = 0; i < getYoloRes.myres.classIds.Count(); i++)
+
+                        getYoloRes.worker(filePath);
+
+                        for (int i = 0; i < getYoloRes.ClassIds.Count(); i++)
                         {
-                            if (getYoloRes.myres.classIds[i] == 0)
+                            if (getYoloRes.ClassIds[i] == 0)
                             {
                                 this.detectionToolbox.Mode = DetectionToolbox.RootTerminalControlMode.AddPrimary;
                             }
 
-                            if (getYoloRes.myres.classIds[i] == 1)
+                            if (getYoloRes.ClassIds[i] == 1)
                             {
                                 this.detectionToolbox.Mode = DetectionToolbox.RootTerminalControlMode.AddLateral;
                             }
 
-                            if (getYoloRes.myres.classIds[i] == 2)
+                            if (getYoloRes.ClassIds[i] == 2)
                             {
-                                this.detectionToolbox.Mode = DetectionToolbox.RootTerminalControlMode.AddSource;  
+                                this.detectionToolbox.Mode = DetectionToolbox.RootTerminalControlMode.AddSource;
                             }
 
-                            this.screenOverlay.fakemouseclickdown(getYoloRes.myres.cpoints[i]);
-                            this.screenOverlay.fakemouseclickup(getYoloRes.myres.cpoints[i]);
+                            this.screenOverlay.fakemouseclickdown(getYoloRes.Centerpoints[i]);
+                            this.screenOverlay.fakemouseclickup(getYoloRes.Centerpoints[i]);
                             this.detectionToolbox.Mode = DetectionToolbox.RootTerminalControlMode.None;
                         };
                         #endregion
@@ -1926,7 +1932,7 @@ namespace RootNav.Interface.Windows
             this.rootTreeView.MouseLeave -= new MouseEventHandler(rootTreeView_MouseLeave);
 
             this.rootTreeView.SelectedItemChanged -= new RoutedPropertyChangedEventHandler<object>(rootTreeView_SelectedItemChanged);
-            
+
             UpdateScreenImage(null);
 
             // Reassign checkboxes
@@ -1944,7 +1950,7 @@ namespace RootNav.Interface.Windows
 
                 this.showSourceImage = false;
             }
-            
+
             if (!this.detectionSlidePanel.IsVisible)
             {
                 this.detectionSlidePanel.BeginShow();

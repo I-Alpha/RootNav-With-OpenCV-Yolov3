@@ -3,24 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using OpenCvSharp;
 using OpenCvSharp.Dnn;
 
+
+
 namespace OpenCvSharpYolo3
 {
-    public class res
-    {  
-        public List<int> classIds { get; set; }
-        public List<float> confidences { get; set; }
-        public List<float> probabilities{ get; set; }
-        public List<Rect2d> boxes { get; set; }
-        public List<System.Windows.Point> cpoints { get; set; }
-        public string run_t { get; set; }
-        public res(){}
-
-    } 
-    public class OpenCVY3
+    public class OpenCVY3 : IOpenCVModule
     {
         #region const/readonly
         //YOLOv3
@@ -34,7 +26,7 @@ namespace OpenCvSharpYolo3
         private const string Names = "obj.names";
 
         //file location
-      
+
         private const string Location = @"..\..\..\..\OpenCvSharpYolo3\Content\";
         //random assign color to each label
         private static readonly Scalar[] Colors = Enumerable.Repeat(false, 80).Select(x => Scalar.RandomColor()).ToArray();
@@ -42,19 +34,33 @@ namespace OpenCvSharpYolo3
         //get labels from coco.names
         private static readonly string[] Labels = File.ReadAllLines(Path.Combine(Location, Names)).ToArray();
         #endregion
-        public res myres = new res();
 
-        
-        private float[] results { get; set; }
+        #region results field
+        private List<int> classIds = new List<int>();
+        private List<float> confidences = new List<float>();
+        private List<float> probabilities = new List<float>();
+        private List<Rect2d> boxes = new List<Rect2d>();
+        private List<System.Windows.Point> centerpoints = new List<System.Windows.Point>();
 
-        public OpenCVY3() { res myres = new res (); }
-        public OpenCVY3(string img) { yworker(img); }
+        public string run_t { get; private set; }
 
-        public void yworker(string image)
+        public List<int> ClassIds { get => classIds; private set => classIds = value; }
+        public List<float> Confidences { get => confidences; private set => confidences = value; }
+        public List<float> Probabilities { get => probabilities; private set => probabilities = value; }
+        public List<Rect2d> Boxes { get => boxes; private set => boxes = value; }
+        public List<System.Windows.Point> Centerpoints { get => centerpoints; private set => centerpoints = value; }
+
+        #endregion
+
+        public OpenCVY3() { }
+
+        public OpenCVY3(string img) { worker(img); }
+
+        public void worker(string image)
         {
 
             #region parameter  
-            
+
             var cfg = Path.Combine(Location, Cfg);
             var model = Path.Combine(Location, Weight);
             const float threshold = 0.3f;       //for confidence 
@@ -66,7 +72,7 @@ namespace OpenCvSharpYolo3
 
             //setting blob, size can be:320/416/608
             //opencv blob setting can check here https://github.com/opencv/opencv/tree/master/samples/dnn#object-detection
-            var blob = CvDnn.BlobFromImage(org, 1.0 / 255, new Size(416, 416), new Scalar(), true, false);
+            var blob = CvDnn.BlobFromImage(org, 1.0 / 255, new OpenCvSharp.Size(416, 416), new Scalar(), true, false);
 
             //load model and config, if you got error: "separator_index < line.size()", check your cfg file, must be something wrong.
             var net = CvDnn.ReadNetFromDarknet(cfg, model);
@@ -104,13 +110,13 @@ namespace OpenCvSharpYolo3
 
             sw.Stop();
             string run_time;
-            run_time= $"Runtime:{sw.ElapsedMilliseconds} ms";
+            run_time = $"Runtime:{sw.ElapsedMilliseconds} ms";
             #endregion
-            
+
             //get result from all output
             GetResult(outs, org, threshold, nmsThreshold);
-            myres.run_t = run_time;  
-                               
+            run_t = run_time;
+
         }
 
 
@@ -124,13 +130,13 @@ namespace OpenCvSharpYolo3
         /// <param name="nms">Enable Non-maximum suppression or not</param>
         private void GetResult(IEnumerable<Mat> output, Mat image, float threshold, float nmsThreshold, bool nms = true)
         {
-            
+            classIds.Clear();
+            confidences.Clear();
+            probabilities.Clear();
+            boxes.Clear();
+            centerpoints.Clear();
             //for nms
-            var classIds = new List<int>();
-            var confidences = new List<float>();
-            var probabilities = new List<float>();
-            var boxes = new List<Rect2d>();
-            var Centerpoints = new List<System.Windows.Point>();  
+
 
             var w = image.Width;
             var h = image.Height;
@@ -149,7 +155,7 @@ namespace OpenCvSharpYolo3
                     if (confidence > threshold)
                     {
                         //get classes probability
-                        Cv2.MinMaxLoc(prob.Row[i].ColRange(prefix, prob.Cols), out _, out Point max);
+                        Cv2.MinMaxLoc(prob.Row[i].ColRange(prefix, prob.Cols), out _, out OpenCvSharp.Point max);
                         var classes = max.X;
                         var probability = prob.At<float>(i, classes + prefix);
 
@@ -167,23 +173,19 @@ namespace OpenCvSharpYolo3
                             confidences.Add(confidence);
                             probabilities.Add(probability);
                             boxes.Add(new Rect2d(centerX, centerY, width, height));
-                            Centerpoints.Add(new System.Windows.Point(centerX, centerY));
+                            centerpoints.Add(new System.Windows.Point(centerX, centerY));
                         }
 
                         //arrange data for output and send
-                        myres.probabilities = probabilities;
-                        myres.confidences = confidences;
-                        myres.classIds = classIds;
-                        myres.boxes = boxes;
-                        myres.cpoints = Centerpoints;
-                    } 
+
+                    }
                 }
             }
 
             if (!nms) return;
 
-        } 
+        }
     }
-
-   
 }
+
+
