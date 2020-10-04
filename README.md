@@ -11,14 +11,15 @@ The only thing I regret about this particular model/project is not having good e
 
 
 ### To use:
-     1. download repository into working folder/drive
-     2. download model trained .weights file from link :
-     3. place model into .....\RootNav-With-OpenCV-Yolov3\OpenCvSharpYolo3\Content folder.
-     4. Run RootNav from .exe file or build and run in Visual Studio. 
+     1. Download repository into working folder/drive
+     2. Download model trained .weights file. Fair warning, this file is pretty chunky so.....
+        here's from link :
+     3. Place model into .....\RootNav-With-OpenCV-Yolov3\OpenCvSharpYolo3\Content folder.
+     4. Run RootNav from .exe file or build and run in Visual Studio. You don't need to build all the modules, just RootNav and it's dependencies, including my OpenCVYOLOv3 Module 
      
 ### notes: 
       There are 3 example never-seen photos of plant root structure in the contents folder, labeled 1-3.png.
       
-  ### If the openCVYOLOv3 is working, you should expect to see the model process and label tips in an instant after a plant root photo has been loaded into RootNav. These tips can then be treated as normal RootNav label tips, modifying, deleteing or adding more as necessary to the workflow of the user.    
+  ### If the openCVYOLOv3 is working, the model's detection results should appear as tip highlights in the main window, overlayed onto the plant root photo. The can then be treated the same as user inputed tip hightlights; Actions such as modifying, deleteing or adding more tips can be done as necessary by the user. Comparing this to vanilla RootNav it should be obvious what the benefits are in terms of speed of specimen processing.
   
-In the future I hope to train and use a YOLOv4 object detection system to further enhance the productivity of RootNav. 
+In the future I hope to train and use a YOLOv4 object detection system to further enhance the productivity of RootNav. Or better yet, after more research, try creating my own model, optimized for RootNav and its specific requirements. 
