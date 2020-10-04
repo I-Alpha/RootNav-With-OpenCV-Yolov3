@@ -13,8 +13,8 @@ The only thing I regret about this particular model/project is not having good e
 ### To use:
      1. Download repository into working folder/drive
      2. Download model trained .weights file. Fair warning, this file is pretty chunky so.....
-        here's from link :
-     3. Place model into .....\RootNav-With-OpenCV-Yolov3\OpenCvSharpYolo3\Content folder.
+        Here's the gdrive link : https://drive.google.com/file/d/13eXmiIRf82l7NZqV47MFTWmvu6WpSt2h/view?usp=sharing
+     3. Once yolov3.weights file is downloaded, place it the content folder in the repository ( .....\RootNav-With-OpenCV-Yolov3\OpenCvSharpYolo3\Content).
      4. Run RootNav from .exe file or build and run in Visual Studio. You don't need to build all the modules, just RootNav and it's dependencies, including my OpenCVYOLOv3 Module 
      
 ### notes: 
