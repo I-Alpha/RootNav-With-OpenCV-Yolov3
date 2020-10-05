@@ -21,6 +21,6 @@ The only thing I regret about this particular model/project is not having good e
 ### notes: 
       There are 3 example never-seen photos of plant root structure in the contents folder, labeled 1-3.png.
       
-  ### If the openCVYOLOv3 is working, the model's detection results should appear as tip highlights in the main window, overlayed onto the plant root photo. The can then be treated the same as user inputed tip hightlights; Actions such as modifying, deleteing or adding more tips can be done as necessary by the user. Comparing this to vanilla RootNav it should be obvious what the benefits are in terms of speed of specimen processing.
+  ### If the openCVYOLOv3 is working, the model's detection results should appear as tip highlights in the main window, overlayed onto the plant root photo. These can then be treated the same as user inputed tip hightlights; Actions such as modifying, deleteing or adding more tips can be done as necessary by the user. Comparing this to vanilla RootNav it should be obvious what the benefits are in terms of speed of specimen processing.
   
 In the future I hope to train and use a YOLOv4 object detection system to further enhance the productivity of RootNav. Or better yet, after more research, try creating my own model, optimized for RootNav and its specific requirements. 
