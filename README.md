@@ -3,8 +3,8 @@
 ## Original Vanilla RootNav<br/>
 <br/>
 <img src ="https://github.com/I-Alpha/RootNav-With-OpenCV-Yolov3/blob/master/RootNav_Original.gif?raw=true">
-<br/>
-<br/>
+<br/><br/>
+
 ## RootNav with Yolo-v3 implemented<br/>
 <br/>
 <img src ="https://github.com/I-Alpha/RootNav-With-OpenCV-Yolov3/blob/master/RootNav_withYolov3.gif?raw=true">
